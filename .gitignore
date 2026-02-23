@@ -1,0 +1,63 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Build outputs
+bin/
+obj/
+
+# NuGet
+*.nupkg
+packages/
+
+# dotnet tools
+dotnet-tools.json
+
+# EF Core
+__EFMigrationsHistory
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# User secrets
+secrets.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Rider and Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Publish output
+publish/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Lock files
+project.lock.json
+
+# JetBrains
+.idea/
+
+# VS Code workspace
+*.code-workspace
