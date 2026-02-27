@@ -51,7 +51,47 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<UserContext>();
-    db.Database.EnsureCreated();
+    // use migrations when available
+    db.Database.Migrate();
+
+    // seed admin and sample users
+    if (!db.Users.Any())
+    {
+        var admin = new UserService.Models.User
+        {
+            Username = "admin",
+            PasswordHash = UserService.Services.PasswordHasher.Hash("Admin@123"),
+            Email = "admin@example.com",
+            Role = "Admin",
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var buyer = new UserService.Models.User
+        {
+            Username = "buyer1",
+            PasswordHash = UserService.Services.PasswordHasher.Hash("buyerpass"),
+            Email = "buyer1@example.com",
+            Role = "Buyer",
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var seller = new UserService.Models.User
+        {
+            Username = "seller1",
+            PasswordHash = UserService.Services.PasswordHasher.Hash("sellerpass"),
+            Email = "seller1@example.com",
+            Role = "Seller",
+            IsSeller = true,
+            IsActive = true,
+            RentPaid = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        db.Users.AddRange(admin, buyer, seller);
+        db.SaveChanges();
+    }
 }
 
 app.Run();

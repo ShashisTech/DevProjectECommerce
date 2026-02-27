@@ -7,5 +7,9 @@ namespace CatalogService.Models
         public string Description { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
+
+        // Category relationship
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
     }
 }

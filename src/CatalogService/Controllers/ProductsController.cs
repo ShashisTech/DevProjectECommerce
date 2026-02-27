@@ -14,9 +14,14 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public IActionResult Get([FromQuery] int? categoryId, [FromQuery] string? name)
     {
-        return Ok(_context.Products.ToList());
+        var query = _context.Products.AsQueryable();
+        if (categoryId.HasValue)
+            query = query.Where(p => p.CategoryId == categoryId.Value);
+        if (!string.IsNullOrEmpty(name))
+            query = query.Where(p => p.Name.Contains(name));
+        return Ok(query.ToList());
     }
 
     [HttpGet("{id}")]
@@ -33,5 +38,22 @@ public class ProductsController : ControllerBase
         _context.Products.Add(product);
         _context.SaveChanges();
         return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+    }
+
+    // Reserve stock for a product (decrement). Returns 200 with product when reserved, 404 if not found, 409 if insufficient stock.
+    [HttpPost("{id}/reserve")]
+    public IActionResult Reserve(int id, [FromBody] ReserveRequest req)
+    {
+        var p = _context.Products.Find(id);
+        if (p == null) return NotFound();
+
+        if (req.Quantity <= 0) return BadRequest(new { error = "Quantity must be greater than zero" });
+
+        if (p.Stock < req.Quantity) return Conflict(new { error = "Insufficient stock" });
+
+        p.Stock -= req.Quantity;
+        _context.SaveChanges();
+
+        return Ok(p);
     }
 }

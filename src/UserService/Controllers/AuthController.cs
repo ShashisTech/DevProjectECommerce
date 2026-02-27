@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
+    public async Task<IActionResult> Register([FromBody] UserService.Dtos.UserRegisterDto dto)
     {
         if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
             return BadRequest("Username already exists");
@@ -30,8 +30,11 @@ public class AuthController : ControllerBase
         var user = new User
         {
             Username = dto.Username,
-            PasswordHash = HashPassword(dto.Password),
-            Role = dto.Role
+            PasswordHash = UserService.Services.PasswordHasher.Hash(dto.Password),
+            Email = dto.Email,
+            Role = dto.Role ?? "Buyer",
+            CreatedAt = DateTime.UtcNow,
+            IsActive = true
         };
 
         _context.Users.Add(user);
@@ -40,11 +43,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
+    public async Task<IActionResult> Login([FromBody] UserService.Dtos.UserLoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
         if (user == null) return Unauthorized();
-        if (!VerifyPassword(dto.Password, user.PasswordHash)) return Unauthorized();
+        if (!UserService.Services.PasswordHasher.Verify(dto.Password, user.PasswordHash)) return Unauthorized();
 
         var token = GenerateJwtToken(user);
         return Ok(new { token });
@@ -59,18 +62,5 @@ public class AuthController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private static string HashPassword(string password)
-    {
-        using var sha = SHA256.Create();
-        var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(bytes);
-    }
-
-    private static bool VerifyPassword(string password, string hash)
-    {
-        return HashPassword(password) == hash;
-    }
+    // password hashing moved to UserService.Services.PasswordHasher
 }
-
-public class UserRegisterDto { public string Username { get; set; } public string Password { get; set; } public string Role { get; set; } }
-public class UserLoginDto { public string Username { get; set; } public string Password { get; set; } }

@@ -11,9 +11,9 @@
 # VS Code
 .vscode/
 
-# Build outputs
-bin/
-obj/
+# Build outputs (per-project)
+**/bin/
+**/obj/
 
 # NuGet
 *.nupkg
@@ -35,8 +35,10 @@ __EFMigrationsHistory
 # Logs
 *.log
 
-# User secrets
+# User secrets and env
 secrets.json
+.env
+.env.*
 
 # OS files
 .DS_Store
@@ -56,8 +58,23 @@ publish/
 # Lock files
 project.lock.json
 
-# JetBrains
-.idea/
-
 # VS Code workspace
 *.code-workspace
+
+# Node (ui-angular)
+ui-angular/node_modules/
+npm-debug.log*
+
+# Test results & coverage
+coverage/
+TestResults/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Misc
+*.pdb
+*.cache
+*.bak
+*.swp

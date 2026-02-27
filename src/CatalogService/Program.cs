@@ -20,18 +20,27 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 
+// migrate and seed sample data
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<CatalogContext>();
     db.Database.Migrate();
 
-    if (!db.Products.Any())
+    if (!db.Categories.Any())
     {
-        db.Products.AddRange(new[] {
-            new Product { Name = "Sample Product A", Description = "Desc A", Price = 9.99m, Stock = 100 },
-            new Product { Name = "Sample Product B", Description = "Desc B", Price = 19.99m, Stock = 50 }
-        });
+        var electronics = new Category { Name = "Electronics" };
+        var books = new Category { Name = "Books" };
+        db.Categories.AddRange(electronics, books);
         db.SaveChanges();
+
+        if (!db.Products.Any())
+        {
+            db.Products.AddRange(new[] {
+                new Product { Name = "Sample Product A", Description = "Desc A", Price = 9.99m, Stock = 100, CategoryId = electronics.Id },
+                new Product { Name = "Sample Product B", Description = "Desc B", Price = 19.99m, Stock = 50, CategoryId = books.Id }
+            });
+            db.SaveChanges();
+        }
     }
 }
 
