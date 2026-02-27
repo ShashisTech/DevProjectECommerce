@@ -1,0 +1,4 @@
+{
+  "name": "DevProjectECommerce",
+  "image": "mcr.microsoft.com/vscode/devcontainers/dotnet:8"
+}
