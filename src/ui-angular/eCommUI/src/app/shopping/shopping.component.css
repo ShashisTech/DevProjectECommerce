@@ -1,0 +1,19 @@
+.shopping-page {
+  padding: 1.5rem;
+}
+.category-section {
+  margin-bottom: 2rem;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.75rem;
+}
+.price {
+  font-weight: bold;
+}

@@ -1,5 +1,7 @@
+using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using TransactionService.Data;
+using TransactionService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,14 +11,8 @@ builder.Services.AddDbContext<TransactionContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// HTTP client to talk to OrderService (base URL via env var 'ORDER_SERVICE_URL' or configuration key 'OrderServiceUrl')
-builder.Services.AddHttpClient("orders", client =>
-{
-    var url = builder.Configuration["OrderServiceUrl"] ?? Environment.GetEnvironmentVariable("ORDER_SERVICE_URL") ?? "http://localhost:5001";
-    client.BaseAddress = new Uri(url);
-});
-
-builder.Services.AddScoped<TransactionService.Services.IOrderClient, TransactionService.Services.OrderClient>();
+// HTTP client to talk to OrderService (base URL configured via OrderServiceUrl)
+builder.Services.AddHttpClient<IOrderClient, OrderClient>();
 
 var app = builder.Build();
 
@@ -37,8 +33,9 @@ using (var scope = app.Services.CreateScope())
     if (!db.Transactions.Any())
     {
         db.Transactions.AddRange(
-            new TransactionService.Models.Transaction { OrderId = 1, Amount = 49.98m, Status = "Succeeded", ProcessedAt = DateTime.UtcNow.AddDays(-1) },
-            new TransactionService.Models.Transaction { OrderId = 2, Amount = 19.99m, Status = "Succeeded", ProcessedAt = DateTime.UtcNow.AddHours(-6) }
+
+            new TransactionService.Models.Transaction { OrderId = 1, Amount = 49.98m, Status = "Succeeded", ProcessedAt = DateTime.UtcNow.AddDays(-1), PaymentMethod = "Card" },
+            new TransactionService.Models.Transaction { OrderId = 2, Amount = 19.99m, Status = "Succeeded", ProcessedAt = DateTime.UtcNow.AddHours(-6), PaymentMethod = "UPI" }
         );
         db.SaveChanges();
     }

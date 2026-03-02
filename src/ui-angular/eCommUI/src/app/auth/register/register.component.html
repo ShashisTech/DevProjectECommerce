@@ -1,0 +1,29 @@
+<div class="auth-container">
+  <h2>Register</h2>
+  <form (ngSubmit)="onSubmit()">
+    <label>
+      User Name
+      <input type="text" [(ngModel)]="model.userName" name="userName" required />
+    </label>
+
+    <label>
+      Email
+      <input type="email" [(ngModel)]="model.email" name="email" required />
+    </label>
+
+    <label>
+      Password
+      <input type="password" [(ngModel)]="model.password" name="password" required />
+    </label>
+
+    <label>
+      Role
+      <select [(ngModel)]="model.role" name="role">
+        <option value="Buyer">Buyer</option>
+        <option value="Seller">Seller</option>
+      </select>
+    </label>
+
+    <button type="submit">Register</button>
+  </form>
+</div>

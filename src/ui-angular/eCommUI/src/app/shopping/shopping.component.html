@@ -1,0 +1,17 @@
+<div class="shopping-page">
+  <h2>Shop by Category</h2>
+
+  <div *ngIf="loading">Loading products...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <section *ngFor="let group of groups" class="category-section">
+    <h3>{{ group.categoryName }}</h3>
+    <div class="product-grid">
+      <article class="product-card" *ngFor="let product of group.products">
+        <h4>{{ product.name }}</h4>
+        <p>{{ product.description }}</p>
+        <p class="price">{{ product.price | currency }}</p>
+      </article>
+    </div>
+  </section>
+</div>

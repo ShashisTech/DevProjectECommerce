@@ -1,0 +1,25 @@
+<div class="catalog-page">
+  <aside class="categories">
+    <h3>Categories</h3>
+    <ul>
+      <li *ngFor="let category of categories"
+          (click)="onCategorySelect(category)"
+          (keydown.enter)="onCategorySelect(category)"
+          tabindex="0"
+          [class.selected]="selectedCategoryId === category.id">
+        {{ category.name }}
+      </li>
+    </ul>
+  </aside>
+
+  <section class="products">
+    <h3>Products</h3>
+    <div class="product-grid">
+      <article class="product-card" *ngFor="let product of products" [routerLink]="['/products', product.id]">
+        <img [src]="product.imageUrl" alt="{{ product.name }}" />
+        <h4>{{ product.name }}</h4>
+        <p class="price">{{ product.price | currency }}</p>
+      </article>
+    </div>
+  </section>
+</div>

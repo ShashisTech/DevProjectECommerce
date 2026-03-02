@@ -22,6 +22,11 @@ services:
     build: ./src/UserService
     ports:
       - "5105:80"
+  biddingapi:
+    build: ./src/BiddingService/Bidding.Api
+    ports:
+      - "5106:80"
+    
   ui:
     build: ./src/ui-angular
     ports:
@@ -32,3 +37,4 @@ services:
       - order
       - transaction
       - auction
+      - biddingapi

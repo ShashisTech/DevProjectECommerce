@@ -1,0 +1,26 @@
+<div class="auth-container">
+  <h2>Login</h2>
+  <form (ngSubmit)="onSubmit()">
+    <label>
+      User Name
+      <input type="text" [(ngModel)]="userName" name="userName" required />
+    </label>
+
+    <label>
+      Password
+      <input type="password" [(ngModel)]="password" name="password" required />
+    </label>
+
+    <label>
+      Role
+      <select [(ngModel)]="role" name="role">
+        <option value="Buyer">Buyer</option>
+        <option value="Seller">Seller</option>
+        <option value="Admin">Admin</option>
+      </select>
+    </label>
+
+    <button type="submit">Login</button>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </form>
+</div>
